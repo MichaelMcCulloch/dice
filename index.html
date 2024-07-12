@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Dice Roller with Rounded Edges</title>
+    <title>3D Dice Roller with Ray Tracing</title>
     <style>
         body, html {
             margin: 0;
@@ -88,29 +88,8 @@
             return new THREE.CanvasTexture(canvas);
         }
 
-        function createRoundedBoxGeometry(width, height, depth, radius, smoothness) {
-            let shape = new THREE.Shape();
-            let eps = 0.00001;
-            let radius0 = radius - eps;
-            shape.absarc(eps, eps, eps, -Math.PI / 2, -Math.PI, true);
-            shape.absarc(eps, height - radius * 2, eps, Math.PI, Math.PI / 2, true);
-            shape.absarc(width - radius * 2, height - radius * 2, eps, Math.PI / 2, 0, true);
-            shape.absarc(width - radius * 2, eps, eps, 0, -Math.PI / 2, true);
-            let geometry = new THREE.ExtrudeBufferGeometry(shape, {
-                amount: depth - radius0 * 2,
-                bevelEnabled: true,
-                bevelSegments: smoothness * 2,
-                steps: 1,
-                bevelSize: radius,
-                bevelThickness: radius0,
-                curveSegments: smoothness
-            });
-            geometry.center();
-            return geometry;
-        }
-
         function createDice() {
-            const diceGeometry = createRoundedBoxGeometry(2, 2, 2, 0.2, 8);
+            const diceGeometry = new THREE.BoxGeometry(2, 2, 2);
             const redDiceMaterials = [1, 2, 3, 4, 5, 6].map(num => 
                 new THREE.MeshPhongMaterial({ map: createDiceTexture(num, 'rgba(255, 200, 200, 0.8)') })
             );
