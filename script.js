@@ -235,7 +235,7 @@ function createResultMatrix() {
         for (let j = 0; j <= 6; j++) {
             const cell = document.createElement('td');
             if (i === 0 && j === 0) {
-                cell.textContent = 'R\\Y';
+                cell.textContent = 'R\\G';
             } else if (i === 0) {
                 cell.textContent = j;
             } else if (j === 0) {
@@ -243,10 +243,10 @@ function createResultMatrix() {
             } else {
                 cell.id = `cell-${i}-${j}`;
                 const redIntensity = (j - 1) / 5;
-                const yellowIntensity = (i - 1) / 5;
-                const red = Math.floor(255 * (0.5 + redIntensity - yellowIntensity / 2));
-                const green = Math.floor(255 * (0.5 - redIntensity / 2 + yellowIntensity / 2));
-                const blue = Math.floor(255 * (0.5 - redIntensity / 2 - yellowIntensity / 2));
+                const greenIntensity = (i - 1) / 5;
+                const red = Math.floor(255 * (0.5 + redIntensity - greenIntensity / 2));
+                const green = Math.floor(255 * (0.5 + greenIntensity - redIntensity / 2));
+                const blue = Math.floor(255 * (0.5 - redIntensity / 2 - greenIntensity / 2));
                 cell.style.backgroundColor = `rgb(${red}, ${green}, ${blue})`;
             }
             row.appendChild(cell);
@@ -265,10 +265,10 @@ function updateResultMatrix() {
             cell.textContent = diceResults[i-1][j-1];
             const intensity = diceResults[i-1][j-1] / total;
             const redIntensity = (j - 1) / 5;
-            const yellowIntensity = (i - 1) / 5;
-            const red = Math.floor(255 * (0.5 + redIntensity - yellowIntensity / 2));
-            const green = Math.floor(255 * (0.5 - redIntensity / 2 + yellowIntensity / 2));
-            const blue = Math.floor(255 * (0.5 - redIntensity / 2 - yellowIntensity / 2));
+            const greenIntensity = (i - 1) / 5;
+            const red = Math.floor(255 * (0.5 + redIntensity - greenIntensity / 2));
+            const green = Math.floor(255 * (0.5 + greenIntensity - redIntensity / 2));
+            const blue = Math.floor(255 * (0.5 - redIntensity / 2 - greenIntensity / 2));
             cell.style.backgroundColor = `rgba(${red}, ${green}, ${blue}, ${0.2 + 0.8 * intensity})`;
         }
     }
