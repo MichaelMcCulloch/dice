@@ -64,8 +64,13 @@ function createDice() {
     scene.add(dice2);
 
     const diceShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1));
-    diceBody1 = new CANNON.Body({ mass: 1, shape: diceShape });
-    diceBody2 = new CANNON.Body({ mass: 1, shape: diceShape });
+    const diceOptions = {
+        mass: 0.3,
+        shape: diceShape,
+        material: new CANNON.Material({ restitution: 0.8 })
+    };
+    diceBody1 = new CANNON.Body(diceOptions);
+    diceBody2 = new CANNON.Body(diceOptions);
     world.addBody(diceBody1);
     world.addBody(diceBody2);
 }
@@ -115,11 +120,11 @@ async function rollDice() {
     diceBody1.position.set(-2, boxSize/2, 0);
     diceBody2.position.set(2, boxSize/2, 0);
 
-    diceBody1.velocity.set((keys[0] - 0.5) * 10, 5, (keys[1] - 0.5) * 10);
-    diceBody2.velocity.set((keys[2] - 0.5) * 10, 5, (keys[3] - 0.5) * 10);
+    diceBody1.velocity.set((keys[0] - 0.5) * 15, 8, (keys[1] - 0.5) * 15);
+    diceBody2.velocity.set((keys[2] - 0.5) * 15, 8, (keys[3] - 0.5) * 15);
 
-    diceBody1.angularVelocity.set((keys[4] - 0.5) * 20, (keys[5] - 0.5) * 20, (keys[6] - 0.5) * 20);
-    diceBody2.angularVelocity.set((keys[7] - 0.5) * 20, (keys[8] - 0.5) * 20, (keys[9] - 0.5) * 20);
+    diceBody1.angularVelocity.set((keys[4] - 0.5) * 30, (keys[5] - 0.5) * 30, (keys[6] - 0.5) * 30);
+    diceBody2.angularVelocity.set((keys[7] - 0.5) * 30, (keys[8] - 0.5) * 30, (keys[9] - 0.5) * 30);
 }
 
 function animate() {
