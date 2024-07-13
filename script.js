@@ -253,25 +253,10 @@ function createResultMatrix() {
 }
 
 function updateResultMatrix() {
-    const total = diceResults.flat().reduce((a, b) => a + b, 0);
     for (let i = 1; i <= 6; i++) {
         for (let j = 1; j <= 6; j++) {
             const cell = document.getElementById(`cell-${i}-${j}`);
             cell.textContent = diceResults[i-1][j-1];
-            const intensity = diceResults[i-1][j-1] / total;
-            let baseColor;
-            if (i === j) {
-                baseColor = [255, 128, 0]; // Orange for diagonal
-            } else if (i === 1 && j === 6) {
-                baseColor = [255, 0, 0]; // Red for top-right
-            } else if (i === 6 && j === 1) {
-                baseColor = [255, 255, 0]; // Yellow for bottom-left
-            } else {
-                const redComponent = Math.floor(255 * (j / 6));
-                const greenComponent = Math.floor(255 * ((7 - i) / 6));
-                baseColor = [redComponent, greenComponent, 0];
-            }
-            cell.style.backgroundColor = `rgba(${baseColor[0]}, ${baseColor[1]}, ${baseColor[2]}, ${0.2 + 0.8 * intensity})`;
         }
     }
 }
