@@ -261,6 +261,40 @@ function updateResultMatrix() {
             cell.textContent = diceResults[i-1][j-1];
         }
     }
+    updateChiSquaredStatistic();
+}
+
+function calculateChiSquared() {
+    const totalRolls = diceResults.flat().reduce((a, b) => a + b, 0);
+    const expectedFrequency = totalRolls / 36;
+    let chiSquared = 0;
+
+    for (let i = 0; i < 6; i++) {
+        for (let j = 0; j < 6; j++) {
+            const observed = diceResults[i][j];
+            chiSquared += Math.pow(observed - expectedFrequency, 2) / expectedFrequency;
+        }
+    }
+
+    return chiSquared;
+}
+
+function updateChiSquaredStatistic() {
+    const chiSquared = calculateChiSquared();
+    const fairnessMetric = document.getElementById('fairnessMetric');
+    fairnessMetric.textContent = `Chi-squared statistic: ${chiSquared.toFixed(2)}`;
+
+    // Interpret the result
+    const degreesOfFreedom = 35; // (6 * 6) - 1
+    const criticalValue = 49.80; // 95% confidence level for 35 degrees of freedom
+    
+    if (chiSquared < criticalValue) {
+        fairnessMetric.style.color = 'green';
+        fairnessMetric.textContent += ' (Dice appear fair)';
+    } else {
+        fairnessMetric.style.color = 'red';
+        fairnessMetric.textContent += ' (Dice may not be fair)';
+    }
 }
 
 init();
