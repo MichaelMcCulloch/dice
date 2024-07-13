@@ -69,17 +69,21 @@ function initThreeJS() {
     camera.lookAt(0, 0, 0);
 
     const light = new THREE.DirectionalLight(0xffffff, 1);
-    light.position.set(5, 10, 7.5);
+    light.position.set(0, 20, 0);
     light.castShadow = true;
     light.shadow.mapSize.width = 2048;
     light.shadow.mapSize.height = 2048;
     light.shadow.camera.near = 1;
     light.shadow.camera.far = 50;
-    light.shadow.camera.left = -10;
-    light.shadow.camera.right = 10;
-    light.shadow.camera.top = 10;
-    light.shadow.camera.bottom = -10;
+    light.shadow.camera.left = -15;
+    light.shadow.camera.right = 15;
+    light.shadow.camera.top = 15;
+    light.shadow.camera.bottom = -15;
     scene.add(light);
+
+    // Helper to visualize light position and shadow camera (uncomment for debugging)
+    // const helper = new THREE.CameraHelper(light.shadow.camera);
+    // scene.add(helper);
 
     const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
     scene.add(ambientLight);
