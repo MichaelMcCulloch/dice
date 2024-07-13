@@ -15,6 +15,8 @@ COPY --from=builder /usr/local/cargo/bin/miniserve /usr/local/bin/miniserve
 
 # Copy the HTML file
 COPY index.html /app/index.html
+COPY script.js /app/script.js
+COPY styles.css /app/styles.css
 
 # Expose port 8080
 EXPOSE 8080
