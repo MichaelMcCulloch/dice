@@ -174,7 +174,7 @@ function checkDiceMovement() {
             updateResultMatrix();
             
             rollCount++;
-            if (rollCount < 10) {
+            if (rollCount < 100) {
                 rollDice(true);
             } else {
                 isSimulating = false;
@@ -223,6 +223,7 @@ async function startSimulation() {
     diceResults = Array(6).fill().map(() => Array(6).fill(0));
     document.getElementById('simulateButton').disabled = true;
     document.getElementById('resultMatrix').style.display = 'block';
+    document.getElementById('simulateButton').textContent = 'Simulating 100 Rolls...';
     await rollDice(true);
 }
 
