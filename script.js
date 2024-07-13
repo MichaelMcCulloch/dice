@@ -242,18 +242,8 @@ function createResultMatrix() {
                 cell.textContent = i;
             } else {
                 cell.id = `cell-${i}-${j}`;
-                if (i === j) {
-                    cell.style.backgroundColor = 'rgb(255, 128, 0)'; // Orange for diagonal
-                } else if (i === 1 && j === 6) {
-                    cell.style.backgroundColor = 'rgb(255, 0, 0)'; // Red for top-right
-                } else if (i === 6 && j === 1) {
-                    cell.style.backgroundColor = 'rgb(255, 255, 0)'; // Yellow for bottom-left
-                } else {
-                    const redComponent = Math.floor(255 * (j / 6));
-                    const greenComponent = Math.floor(255 * ((7 - i) / 6));
-                    cell.style.backgroundColor = `rgb(${redComponent}, ${greenComponent}, 0)`;
-                }
             }
+            cell.style.backgroundColor = 'gray';
             row.appendChild(cell);
         }
         table.appendChild(row);
