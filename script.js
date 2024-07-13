@@ -62,10 +62,10 @@ function createDiceTexture(number, color) {
 
 function createDice() {
     const diceGeometry = new THREE.BoxGeometry(2, 2, 2);
-    const redDiceMaterials = [1, 2, 3, 4, 5, 6].map(num => 
+    const redDiceMaterials = [1, 6, 2, 5, 3, 4].map(num => 
         new THREE.MeshPhongMaterial({ map: createDiceTexture(num, 'rgba(255, 200, 200, 0.8)') })
     );
-    const yellowDiceMaterials = [1, 2, 3, 4, 5, 6].map(num => 
+    const yellowDiceMaterials = [1, 6, 2, 5, 3, 4].map(num => 
         new THREE.MeshPhongMaterial({ map: createDiceTexture(num, 'rgba(255, 255, 200, 0.8)') })
     );
 
@@ -80,11 +80,17 @@ function createDice() {
         [0, -1, 0], [0, 0, 1], [0, 0, -1]
     ];
     const faceLabels = ['Right (1)', 'Left (6)', 'Top (2)', 'Bottom (5)', 'Front (3)', 'Back (4)'];
-    facePositions.forEach((pos, index) => {
-        const label = createTextLabel(faceLabels[index]);
-        label.position.set(pos[0], pos[1], pos[2]);
-        dice1.add(label);
-    });
+    
+    function addLabelsToMesh(mesh) {
+        facePositions.forEach((pos, index) => {
+            const label = createTextLabel(faceLabels[index]);
+            label.position.set(pos[0] * 1.01, pos[1] * 1.01, pos[2] * 1.01);
+            mesh.add(label);
+        });
+    }
+
+    addLabelsToMesh(dice1);
+    addLabelsToMesh(dice2);
 
     const diceShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1));
     const diceOptions = {
