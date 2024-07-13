@@ -17,6 +17,23 @@ function init() {
     document.addEventListener('touchstart', rollDice);
     document.getElementById('simulateButton').addEventListener('click', startSimulation);
 
+    let tapCount = 0;
+    let lastTapTime = 0;
+    document.addEventListener('touchend', (e) => {
+        const currentTime = new Date().getTime();
+        const tapLength = currentTime - lastTapTime;
+        if (tapLength < 500 && tapLength > 0) {
+            tapCount++;
+            if (tapCount == 3) {
+                document.getElementById('simulateButton').style.display = 'block';
+                tapCount = 0;
+            }
+        } else {
+            tapCount = 1;
+        }
+        lastTapTime = currentTime;
+    });
+
     animate();
 }
 
@@ -224,6 +241,7 @@ async function startSimulation() {
     diceResults = Array(6).fill().map(() => Array(6).fill(0));
     document.getElementById('simulateButton').disabled = true;
     document.getElementById('resultMatrix').style.display = 'block';
+    document.getElementById('fairnessMetric').style.display = 'block';
     document.getElementById('simulateButton').textContent = 'Simulating 10000 Rolls...';
     await rollDice(true);
 }
