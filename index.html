@@ -138,24 +138,23 @@
             });
         }
 
-        async function getSecureRandomNumber() {
-            const array = new Uint32Array(1);
+        async function getSecureRandomNumbers(count) {
+            const array = new Uint32Array(count);
             crypto.getRandomValues(array);
-            return array[0] / (0xffffffff + 1);
+            return Array.from(array).map(val => val / (0xffffffff + 1));
         }
 
         async function rollDice() {
-            const key1 = await getSecureRandomNumber();
-            const key2 = await getSecureRandomNumber();
+            const keys = await getSecureRandomNumbers(10);
 
             diceBody1.position.set(-2, boxSize/2, 0);
             diceBody2.position.set(2, boxSize/2, 0);
 
-            diceBody1.velocity.set((key1 - 0.5) * 10, 5, (key2 - 0.5) * 10);
-            diceBody2.velocity.set((key2 - 0.5) * 10, 5, (key1 - 0.5) * 10);
+            diceBody1.velocity.set((keys[0] - 0.5) * 10, 5, (keys[1] - 0.5) * 10);
+            diceBody2.velocity.set((keys[2] - 0.5) * 10, 5, (keys[3] - 0.5) * 10);
 
-            diceBody1.angularVelocity.set((key1 - 0.5) * 20, (key2 - 0.5) * 20, (key1 - 0.5) * 20);
-            diceBody2.angularVelocity.set((key2 - 0.5) * 20, (key1 - 0.5) * 20, (key2 - 0.5) * 20);
+            diceBody1.angularVelocity.set((keys[4] - 0.5) * 20, (keys[5] - 0.5) * 20, (keys[6] - 0.5) * 20);
+            diceBody2.angularVelocity.set((keys[7] - 0.5) * 20, (keys[8] - 0.5) * 20, (keys[9] - 0.5) * 20);
         }
 
         function animate() {
