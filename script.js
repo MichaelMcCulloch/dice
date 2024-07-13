@@ -125,11 +125,11 @@ function createDice() {
 
 
 function createBoundingBox() {
-    // Visual bounding box
-    const boxGeometry = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
-    const boxMaterial = new THREE.MeshBasicMaterial({ color: 0x888888, wireframe: true });
-    const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
-    scene.add(boxMesh);
+    // Visual bounding box (commented out to hide)
+    // const boxGeometry = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
+    // const boxMaterial = new THREE.MeshBasicMaterial({ color: 0x888888, wireframe: true });
+    // const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
+    // scene.add(boxMesh);
 
     // Floor
     const floorShape = new CANNON.Plane();
