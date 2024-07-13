@@ -61,6 +61,8 @@ function initThreeJS() {
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     document.getElementById('container').appendChild(renderer.domElement);
 
     camera.position.set(0, 20, 0);
@@ -68,6 +70,11 @@ function initThreeJS() {
 
     const light = new THREE.DirectionalLight(0xffffff, 1);
     light.position.set(5, 10, 7.5);
+    light.castShadow = true;
+    light.shadow.mapSize.width = 1024;
+    light.shadow.mapSize.height = 1024;
+    light.shadow.camera.near = 1;
+    light.shadow.camera.far = 20;
     scene.add(light);
 
     const ambientLight = new THREE.AmbientLight(0x404040);
@@ -108,6 +115,8 @@ function createDice() {
 
     dice1 = new THREE.Mesh(diceGeometry, redDiceMaterials);
     dice2 = new THREE.Mesh(diceGeometry, yellowDiceMaterials);
+    dice1.castShadow = true;
+    dice2.castShadow = true;
     scene.add(dice1);
     scene.add(dice2);
 
@@ -197,10 +206,11 @@ function animate() {
 
 function createGroundPlane() {
     const planeGeometry = new THREE.PlaneGeometry(100, 100);
-    const planeMaterial = new THREE.MeshBasicMaterial({ color: 0x888888, side: THREE.DoubleSide });
+    const planeMaterial = new THREE.MeshPhongMaterial({ color: 0x888888, side: THREE.DoubleSide });
     const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
     planeMesh.rotation.x = -Math.PI / 2;
     planeMesh.position.y = -boxSize / 2;
+    planeMesh.receiveShadow = true;
     scene.add(planeMesh);
 }
 
