@@ -193,23 +193,30 @@ function checkDiceMovement() {
 }
 
 function getDiceResult(dice) {
-    const diceRotation = new THREE.Euler().setFromQuaternion(dice.quaternion);
-    const rotationX = Math.round(diceRotation.x / (Math.PI / 2)) % 4;
-    const rotationY = Math.round(diceRotation.y / (Math.PI / 2)) % 4;
-    const rotationZ = Math.round(diceRotation.z / (Math.PI / 2)) % 4;
+    // Get the global rotation of the dice
+    const rotation = new THREE.Euler().setFromQuaternion(dice.quaternion, 'XYZ');
+    
+    // Convert rotation to degrees for easier debugging
+    const rotationDegrees = {
+        x: THREE.MathUtils.radToDeg(rotation.x),
+        y: THREE.MathUtils.radToDeg(rotation.y),
+        z: THREE.MathUtils.radToDeg(rotation.z)
+    };
+    
+    console.log(`Dice rotation (degrees): X=${rotationDegrees.x.toFixed(2)}, Y=${rotationDegrees.y.toFixed(2)}, Z=${rotationDegrees.z.toFixed(2)}`);
 
-    console.log(`Dice rotation: X=${rotationX}, Y=${rotationY}, Z=${rotationZ}`);
+    // Determine which face is most upward
+    const absX = Math.abs(rotation.x);
+    const absY = Math.abs(rotation.y);
+    const absZ = Math.abs(rotation.z);
 
-    if (rotationX === 0 && rotationZ === 0) return 1;
-    if (rotationX === 2 && rotationZ === 0) return 6;
-    if (rotationX === 1 && rotationZ === 0) return 2;
-    if (rotationX === 3 && rotationZ === 0) return 5;
-    if (rotationY === 1) return 3;
-    if (rotationY === 3) return 4;
-
-    // Default case (shouldn't happen with proper physics)
-    console.log('Warning: Unexpected dice orientation');
-    return 1;
+    if (absZ > absX && absZ > absY) {
+        return rotation.z > 0 ? 3 : 4;
+    } else if (absY > absX) {
+        return rotation.y > 0 ? 2 : 5;
+    } else {
+        return rotation.x > 0 ? 1 : 6;
+    }
 }
 
 async function startSimulation() {
