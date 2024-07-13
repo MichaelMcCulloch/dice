@@ -133,10 +133,11 @@ function createDice() {
     scene.add(dice2);
 
     const diceShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1));
+    const diceMaterial = new CANNON.Material({ restitution: 1.8 });
     const diceOptions = {
         mass: 0.3,
         shape: diceShape,
-        material: new CANNON.Material({ restitution: 1.8 })
+        material: diceMaterial
     };
     diceBody1 = new CANNON.Body(diceOptions);
     diceBody2 = new CANNON.Body(diceOptions);
@@ -154,10 +155,20 @@ function createBoundingBox() {
 
     // Floor
     const floorShape = new CANNON.Plane();
-    const floorBody = new CANNON.Body({ mass: 0 });
+    const floorMaterial = new CANNON.Material({ restitution: 1.5 });
+    const floorBody = new CANNON.Body({ mass: 0, material: floorMaterial });
     floorBody.addShape(floorShape);
     floorBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
     world.addBody(floorBody);
+
+    // Create contact material between dice and floor
+    const diceMaterial = new CANNON.Material({ restitution: 1.8 });
+    const diceFloorContactMaterial = new CANNON.ContactMaterial(
+        diceMaterial,
+        floorMaterial,
+        { restitution: 1.5, friction: 0.1 }
+    );
+    world.addContactMaterial(diceFloorContactMaterial);
 
     // Walls
     const wallShape = new CANNON.Plane();
@@ -170,7 +181,7 @@ function createBoundingBox() {
     ];
 
     wallPositions.forEach(wall => {
-        const wallBody = new CANNON.Body({ mass: 0 });
+        const wallBody = new CANNON.Body({ mass: 0, material: floorMaterial });
         wallBody.addShape(wallShape);
         wallBody.position.set(...wall.pos);
         wallBody.quaternion.setFromEuler(...wall.rot);
