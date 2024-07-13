@@ -19,6 +19,9 @@ function init() {
 
     let tapCount = 0;
     let lastTapTime = 0;
+    let clickCount = 0;
+    let lastClickTime = 0;
+
     document.addEventListener('touchend', (e) => {
         const currentTime = new Date().getTime();
         const tapLength = currentTime - lastTapTime;
@@ -32,6 +35,21 @@ function init() {
             tapCount = 1;
         }
         lastTapTime = currentTime;
+    });
+
+    document.addEventListener('click', (e) => {
+        const currentTime = new Date().getTime();
+        const clickLength = currentTime - lastClickTime;
+        if (clickLength < 500 && clickLength > 0) {
+            clickCount++;
+            if (clickCount == 3) {
+                document.getElementById('simulateButton').style.display = 'block';
+                clickCount = 0;
+            }
+        } else {
+            clickCount = 1;
+        }
+        lastClickTime = currentTime;
     });
 
     animate();
