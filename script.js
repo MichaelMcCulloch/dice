@@ -164,8 +164,12 @@ function checkDiceMovement() {
     const angularVelocity1 = diceBody1.angularVelocity.length();
     const angularVelocity2 = diceBody2.angularVelocity.length();
 
+    console.log(`Velocities: Dice1=${velocity1.toFixed(2)}, Dice2=${velocity2.toFixed(2)}`);
+    console.log(`Angular Velocities: Dice1=${angularVelocity1.toFixed(2)}, Dice2=${angularVelocity2.toFixed(2)}`);
+
     if (velocity1 < 0.1 && velocity2 < 0.1 && angularVelocity1 < 0.1 && angularVelocity2 < 0.1) {
         if (currentTime - lastMovementTime > 1000) {
+            console.log('Dice have stopped moving. Calculating results...');
             const result1 = getDiceResult(dice1);
             const result2 = getDiceResult(dice2);
             diceResults.push({ dice1: result1, dice2: result2 });
@@ -173,6 +177,7 @@ function checkDiceMovement() {
             
             rollCount++;
             if (rollCount < 10) {
+                console.log('Starting next roll...');
                 rollDice(true);
             } else {
                 isSimulating = false;
@@ -193,6 +198,8 @@ function getDiceResult(dice) {
     const rotationY = Math.round(diceRotation.y / (Math.PI / 2)) % 4;
     const rotationZ = Math.round(diceRotation.z / (Math.PI / 2)) % 4;
 
+    console.log(`Dice rotation: X=${rotationX}, Y=${rotationY}, Z=${rotationZ}`);
+
     if (rotationX === 0 && rotationZ === 0) return 1;
     if (rotationX === 2 && rotationZ === 0) return 6;
     if (rotationX === 1 && rotationZ === 0) return 2;
@@ -201,6 +208,7 @@ function getDiceResult(dice) {
     if (rotationY === 3) return 4;
 
     // Default case (shouldn't happen with proper physics)
+    console.log('Warning: Unexpected dice orientation');
     return 1;
 }
 
