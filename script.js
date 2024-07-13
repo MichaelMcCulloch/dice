@@ -69,7 +69,7 @@ function initThreeJS() {
     camera.lookAt(0, 0, 0);
 
     const hemisphereLight = new THREE.HemisphereLight(0xffeeb1, 0x080820, 0.5);
-    hemisphereLight.position.set(0, 50, 0);  // Positioning the light higher up
+    hemisphereLight.position.set(0, 500, 0);  // Positioning the light much higher up
     scene.add(hemisphereLight);
 
     const spotLight = new THREE.SpotLight(0xffa95c, 0.7);
