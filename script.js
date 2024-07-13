@@ -1,16 +1,29 @@
 let scene, camera, renderer, world;
 let dice1, dice2, diceBody1, diceBody2;
 const boxSize = 10;
+let isSimulating = false;
+let rollCount = 0;
+let lastMovementTime = 0;
 
 function init() {
+    initThreeJS();
+    initCannon();
+    createDice();
+    createBoundingBox();
+
+    document.addEventListener('click', rollDice);
+    document.addEventListener('touchstart', rollDice);
+    document.getElementById('simulateButton').addEventListener('click', startSimulation);
+
+    animate();
+}
+
+function initThreeJS() {
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.getElementById('container').appendChild(renderer.domElement);
-
-    world = new CANNON.World();
-    world.gravity.set(0, -9.82, 0);
 
     camera.position.set(0, 20, 0);
     camera.lookAt(0, 0, 0);
@@ -21,14 +34,11 @@ function init() {
 
     const ambientLight = new THREE.AmbientLight(0x404040);
     scene.add(ambientLight);
+}
 
-    createDice();
-    createBoundingBox();
-
-    document.addEventListener('click', rollDice);
-    document.addEventListener('touchstart', rollDice);
-
-    animate();
+function initCannon() {
+    world = new CANNON.World();
+    world.gravity.set(0, -9.82, 0);
 }
 
 function createDiceTexture(number, color) {
@@ -114,7 +124,8 @@ async function getSecureRandomNumbers(count) {
     return Array.from(array).map(val => val / (0xffffffff + 1));
 }
 
-async function rollDice() {
+async function rollDice(isSimulation = false) {
+    if (!isSimulation && isSimulating) return;
     const keys = await getSecureRandomNumbers(10);
 
     diceBody1.position.set(-2, boxSize/2, 0);
@@ -139,6 +150,41 @@ function animate() {
     dice2.quaternion.copy(diceBody2.quaternion);
 
     renderer.render(scene, camera);
+
+    if (isSimulating) {
+        checkDiceMovement();
+    }
+}
+
+function checkDiceMovement() {
+    const currentTime = Date.now();
+    const velocity1 = diceBody1.velocity.length();
+    const velocity2 = diceBody2.velocity.length();
+    const angularVelocity1 = diceBody1.angularVelocity.length();
+    const angularVelocity2 = diceBody2.angularVelocity.length();
+
+    if (velocity1 < 0.1 && velocity2 < 0.1 && angularVelocity1 < 0.1 && angularVelocity2 < 0.1) {
+        if (currentTime - lastMovementTime > 1000) {
+            rollCount++;
+            if (rollCount < 10) {
+                rollDice(true);
+            } else {
+                isSimulating = false;
+                rollCount = 0;
+                document.getElementById('simulateButton').disabled = false;
+            }
+        }
+    } else {
+        lastMovementTime = currentTime;
+    }
+}
+
+async function startSimulation() {
+    if (isSimulating) return;
+    isSimulating = true;
+    rollCount = 0;
+    document.getElementById('simulateButton').disabled = true;
+    await rollDice(true);
 }
 
 init();
