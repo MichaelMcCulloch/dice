@@ -220,7 +220,7 @@ function createGroundPlane() {
     const planeMaterial = new THREE.MeshPhongMaterial({ color: 0x888888, side: THREE.DoubleSide });
     const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
     planeMesh.rotation.x = -Math.PI / 2;
-    planeMesh.position.y = -boxSize / 2 + 2; // Raised the ground plane by 2 units
+    planeMesh.position.y = -boxSize / 2 + 3; // Raised the ground plane by 3 units
     planeMesh.receiveShadow = true;
     scene.add(planeMesh);
 }
