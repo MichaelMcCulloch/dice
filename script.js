@@ -174,12 +174,13 @@ function checkDiceMovement() {
             updateResultMatrix();
             
             rollCount++;
-            if (rollCount < 100) {
+            if (rollCount < 10000) {
                 rollDice(true);
             } else {
                 isSimulating = false;
                 rollCount = 0;
                 document.getElementById('simulateButton').disabled = false;
+                document.getElementById('simulateButton').textContent = 'Simulate 10000 Rolls';
                 console.log("Simulation complete. Final results:", diceResults);
             }
         }
@@ -223,7 +224,7 @@ async function startSimulation() {
     diceResults = Array(6).fill().map(() => Array(6).fill(0));
     document.getElementById('simulateButton').disabled = true;
     document.getElementById('resultMatrix').style.display = 'block';
-    document.getElementById('simulateButton').textContent = 'Simulating 100 Rolls...';
+    document.getElementById('simulateButton').textContent = 'Simulating 10000 Rolls...';
     await rollDice(true);
 }
 
