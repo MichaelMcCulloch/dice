@@ -68,18 +68,22 @@ function initThreeJS() {
     camera.position.set(0, 20, 0);
     camera.lookAt(0, 0, 0);
 
-    const hemisphereLight = new THREE.HemisphereLight(0xffeeb1, 0x080820, 1);
+    const hemisphereLight = new THREE.HemisphereLight(0xffeeb1, 0x080820, 0.5);
     scene.add(hemisphereLight);
 
-    const spotLight = new THREE.SpotLight(0xffa95c, 1);
-    spotLight.position.set(5, 10, 7.5);
+    const spotLight = new THREE.SpotLight(0xffa95c, 0.7);
+    spotLight.position.set(5, 15, 7.5);
     spotLight.castShadow = true;
-    spotLight.shadow.mapSize.width = 1024;
-    spotLight.shadow.mapSize.height = 1024;
+    spotLight.shadow.mapSize.width = 2048;
+    spotLight.shadow.mapSize.height = 2048;
     spotLight.shadow.camera.near = 1;
     spotLight.shadow.camera.far = 50;
-    spotLight.shadow.radius = 10;  // This creates softer (fuzzy) shadows
+    spotLight.shadow.radius = 5;
+    spotLight.shadow.bias = -0.0001;
     scene.add(spotLight);
+
+    const ambientLight = new THREE.AmbientLight(0x404040, 0.3);
+    scene.add(ambientLight);
 
     // Helper to visualize light position and shadow camera (uncomment for debugging)
     // const helper = new THREE.CameraHelper(spotLight.shadow.camera);
