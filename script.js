@@ -12,6 +12,7 @@ function init() {
     initCannon();
     createDice();
     createBoundingBox();
+    createGroundPlane();
 
     document.addEventListener('click', rollDice);
     document.addEventListener('touchstart', rollDice);
@@ -192,6 +193,15 @@ function animate() {
     if (isSimulating) {
         checkDiceMovement();
     }
+}
+
+function createGroundPlane() {
+    const planeGeometry = new THREE.PlaneGeometry(100, 100);
+    const planeMaterial = new THREE.MeshBasicMaterial({ color: 0x888888, side: THREE.DoubleSide });
+    const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
+    planeMesh.rotation.x = -Math.PI / 2;
+    planeMesh.position.y = -boxSize / 2;
+    scene.add(planeMesh);
 }
 
 function checkDiceMovement() {
