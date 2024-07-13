@@ -189,30 +189,31 @@ function checkDiceMovement() {
 }
 
 function getDiceResult(dice) {
-    // Get the global rotation of the dice
-    const rotation = new THREE.Euler().setFromQuaternion(dice.quaternion, 'XYZ');
-    
-    // Convert rotation to degrees for easier debugging
-    const rotationDegrees = {
-        x: THREE.MathUtils.radToDeg(rotation.x),
-        y: THREE.MathUtils.radToDeg(rotation.y),
-        z: THREE.MathUtils.radToDeg(rotation.z)
-    };
-    
-    console.log(`Dice rotation (degrees): X=${rotationDegrees.x.toFixed(2)}, Y=${rotationDegrees.y.toFixed(2)}, Z=${rotationDegrees.z.toFixed(2)}`);
+    const up = new THREE.Vector3(0, 1, 0);
+    const faceNormals = [
+        new THREE.Vector3(1, 0, 0),   // right face (1)
+        new THREE.Vector3(-1, 0, 0),  // left face (6)
+        new THREE.Vector3(0, 1, 0),   // top face (2)
+        new THREE.Vector3(0, -1, 0),  // bottom face (5)
+        new THREE.Vector3(0, 0, 1),   // front face (3)
+        new THREE.Vector3(0, 0, -1)   // back face (4)
+    ];
 
-    // Determine which face is most upward
-    const absX = Math.abs(rotation.x);
-    const absY = Math.abs(rotation.y);
-    const absZ = Math.abs(rotation.z);
+    const rotationMatrix = new THREE.Matrix4().makeRotationFromQuaternion(dice.quaternion);
+    let maxDot = -Infinity;
+    let result = 0;
 
-    if (absZ > absX && absZ > absY) {
-        return rotation.z > 0 ? 3 : 4;
-    } else if (absY > absX) {
-        return rotation.y > 0 ? 2 : 5;
-    } else {
-        return rotation.x > 0 ? 1 : 6;
-    }
+    faceNormals.forEach((normal, index) => {
+        normal.applyMatrix4(rotationMatrix);
+        const dot = normal.dot(up);
+        if (dot > maxDot) {
+            maxDot = dot;
+            result = [1, 6, 2, 5, 3, 4][index];
+        }
+    });
+
+    console.log(`Dice result: ${result}, Max dot product: ${maxDot.toFixed(4)}`);
+    return result;
 }
 
 async function startSimulation() {
