@@ -133,7 +133,7 @@ function createDice() {
     scene.add(dice2);
 
     const diceShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1));
-    const diceMaterial = new CANNON.Material({ restitution: 1.8 });
+    const diceMaterial = new CANNON.Material({ restitution: 0.5 });
     const diceOptions = {
         mass: 0.3,
         shape: diceShape,
@@ -155,18 +155,18 @@ function createBoundingBox() {
 
     // Floor
     const floorShape = new CANNON.Plane();
-    const floorMaterial = new CANNON.Material({ restitution: 1.5 });
+    const floorMaterial = new CANNON.Material({ restitution: 0.8 });
     const floorBody = new CANNON.Body({ mass: 0, material: floorMaterial });
     floorBody.addShape(floorShape);
     floorBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
     world.addBody(floorBody);
 
     // Create contact material between dice and floor
-    const diceMaterial = new CANNON.Material({ restitution: 1.8 });
+    const diceMaterial = new CANNON.Material({ restitution: 0.8 });
     const diceFloorContactMaterial = new CANNON.ContactMaterial(
         diceMaterial,
         floorMaterial,
-        { restitution: 1.5, friction: 0.1 }
+        { restitution: 0.8, friction: 0.1 }
     );
     world.addContactMaterial(diceFloorContactMaterial);
 
@@ -202,11 +202,11 @@ async function rollDice(isSimulation = false) {
     diceBody1.position.set(-2, boxSize/2, 0);
     diceBody2.position.set(2, boxSize/2, 0);
 
-    diceBody1.velocity.set((keys[0] - 0.5) * 40, 20, (keys[1] - 0.5) * 40);
-    diceBody2.velocity.set((keys[2] - 0.5) * 40, 20, (keys[3] - 0.5) * 40);
-
-    diceBody1.angularVelocity.set((keys[4] - 0.5) * 80, (keys[5] - 0.5) * 80, (keys[6] - 0.5) * 80);
-    diceBody2.angularVelocity.set((keys[7] - 0.5) * 80, (keys[8] - 0.5) * 80, (keys[9] - 0.5) * 80);
+    diceBody1.velocity.set((keys[0] - 0.5) * 15, 8, (keys[1] - 0.5) * 15);                                               
+    diceBody2.velocity.set((keys[2] - 0.5) * 15, 8, (keys[3] - 0.5) * 15);                                               
+                                                                                                                         
+    diceBody1.angularVelocity.set((keys[4] - 0.5) * 30, (keys[5] - 0.5) * 30, (keys[6] - 0.5) * 30);                     
+    diceBody2.angularVelocity.set((keys[7] - 0.5) * 30, (keys[8] - 0.5) * 30, (keys[9] - 0.5) * 30);
 }
 
 function animate() {
