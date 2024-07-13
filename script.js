@@ -4,6 +4,7 @@ const boxSize = 10;
 let isSimulating = false;
 let rollCount = 0;
 let lastMovementTime = 0;
+let diceResults = [];
 
 function init() {
     initThreeJS();
@@ -165,6 +166,11 @@ function checkDiceMovement() {
 
     if (velocity1 < 0.1 && velocity2 < 0.1 && angularVelocity1 < 0.1 && angularVelocity2 < 0.1) {
         if (currentTime - lastMovementTime > 1000) {
+            const result1 = getDiceResult(dice1);
+            const result2 = getDiceResult(dice2);
+            diceResults.push({ dice1: result1, dice2: result2 });
+            console.log(`Roll ${rollCount + 1}: Dice 1 = ${result1}, Dice 2 = ${result2}`);
+            
             rollCount++;
             if (rollCount < 10) {
                 rollDice(true);
@@ -172,6 +178,8 @@ function checkDiceMovement() {
                 isSimulating = false;
                 rollCount = 0;
                 document.getElementById('simulateButton').disabled = false;
+                console.log("Simulation complete. Final results:", diceResults);
+                diceResults = [];
             }
         }
     } else {
@@ -179,10 +187,28 @@ function checkDiceMovement() {
     }
 }
 
+function getDiceResult(dice) {
+    const diceRotation = new THREE.Euler().setFromQuaternion(dice.quaternion);
+    const rotationX = Math.round(diceRotation.x / (Math.PI / 2)) % 4;
+    const rotationY = Math.round(diceRotation.y / (Math.PI / 2)) % 4;
+    const rotationZ = Math.round(diceRotation.z / (Math.PI / 2)) % 4;
+
+    if (rotationX === 0 && rotationZ === 0) return 1;
+    if (rotationX === 2 && rotationZ === 0) return 6;
+    if (rotationX === 1 && rotationZ === 0) return 2;
+    if (rotationX === 3 && rotationZ === 0) return 5;
+    if (rotationY === 1) return 3;
+    if (rotationY === 3) return 4;
+
+    // Default case (shouldn't happen with proper physics)
+    return 1;
+}
+
 async function startSimulation() {
     if (isSimulating) return;
     isSimulating = true;
     rollCount = 0;
+    diceResults = [];
     document.getElementById('simulateButton').disabled = true;
     await rollDice(true);
 }
