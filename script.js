@@ -242,13 +242,17 @@ function createResultMatrix() {
                 cell.textContent = i;
             } else {
                 cell.id = `cell-${i}-${j}`;
-                const redIntensity = j / 6;
-                const greenIntensity = (6 - i) / 6;
-                const yellowIntensity = i / 6;
-                const red = Math.floor(255 * (redIntensity + yellowIntensity / 2));
-                const green = Math.floor(255 * (greenIntensity + yellowIntensity / 2));
-                const blue = Math.floor(255 * (1 - redIntensity - greenIntensity) / 2);
-                cell.style.backgroundColor = `rgb(${red}, ${green}, ${blue})`;
+                if (i === j) {
+                    cell.style.backgroundColor = 'rgb(255, 128, 0)'; // Orange for diagonal
+                } else if (i === 1 && j === 6) {
+                    cell.style.backgroundColor = 'rgb(255, 0, 0)'; // Red for top-right
+                } else if (i === 6 && j === 1) {
+                    cell.style.backgroundColor = 'rgb(255, 255, 0)'; // Yellow for bottom-left
+                } else {
+                    const redComponent = Math.floor(255 * (j / 6));
+                    const greenComponent = Math.floor(255 * ((7 - i) / 6));
+                    cell.style.backgroundColor = `rgb(${redComponent}, ${greenComponent}, 0)`;
+                }
             }
             row.appendChild(cell);
         }
@@ -265,13 +269,19 @@ function updateResultMatrix() {
             const cell = document.getElementById(`cell-${i}-${j}`);
             cell.textContent = diceResults[i-1][j-1];
             const intensity = diceResults[i-1][j-1] / total;
-            const redIntensity = j / 6;
-            const greenIntensity = (6 - i) / 6;
-            const yellowIntensity = i / 6;
-            const red = Math.floor(255 * (redIntensity + yellowIntensity / 2));
-            const green = Math.floor(255 * (greenIntensity + yellowIntensity / 2));
-            const blue = Math.floor(255 * (1 - redIntensity - greenIntensity) / 2);
-            cell.style.backgroundColor = `rgba(${red}, ${green}, ${blue}, ${0.2 + 0.8 * intensity})`;
+            let baseColor;
+            if (i === j) {
+                baseColor = [255, 128, 0]; // Orange for diagonal
+            } else if (i === 1 && j === 6) {
+                baseColor = [255, 0, 0]; // Red for top-right
+            } else if (i === 6 && j === 1) {
+                baseColor = [255, 255, 0]; // Yellow for bottom-left
+            } else {
+                const redComponent = Math.floor(255 * (j / 6));
+                const greenComponent = Math.floor(255 * ((7 - i) / 6));
+                baseColor = [redComponent, greenComponent, 0];
+            }
+            cell.style.backgroundColor = `rgba(${baseColor[0]}, ${baseColor[1]}, ${baseColor[2]}, ${0.2 + 0.8 * intensity})`;
         }
     }
 }
