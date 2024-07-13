@@ -83,8 +83,8 @@ function initThreeJS() {
     scene.add(light);
 
     // Helper to visualize light position and shadow camera (uncomment for debugging)
-    const helper = new THREE.CameraHelper(light.shadow.camera);
-    scene.add(helper);
+    // const helper = new THREE.CameraHelper(light.shadow.camera);
+    // scene.add(helper);
 
     const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
     scene.add(ambientLight);
