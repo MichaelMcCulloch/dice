@@ -74,24 +74,6 @@ function createDice() {
     scene.add(dice1);
     scene.add(dice2);
 
-    // Add debug labels to dice faces
-    const facePositions = [
-        [1, 0, 0], [-1, 0, 0], [0, 1, 0],
-        [0, -1, 0], [0, 0, 1], [0, 0, -1]
-    ];
-    const faceLabels = ['Right (1)', 'Left (6)', 'Top (2)', 'Bottom (5)', 'Front (3)', 'Back (4)'];
-    
-    function addLabelsToMesh(mesh) {
-        facePositions.forEach((pos, index) => {
-            const label = createTextLabel(faceLabels[index]);
-            label.position.set(pos[0] * 1.01, pos[1] * 1.01, pos[2] * 1.01);
-            mesh.add(label);
-        });
-    }
-
-    addLabelsToMesh(dice1);
-    addLabelsToMesh(dice2);
-
     const diceShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1));
     const diceOptions = {
         mass: 0.3,
@@ -104,19 +86,6 @@ function createDice() {
     world.addBody(diceBody2);
 }
 
-function createTextLabel(text) {
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
-    context.font = 'Bold 20px Arial';
-    context.fillStyle = 'rgba(0, 0, 0, 0.95)';
-    context.fillText(text, 0, 20);
-    
-    const texture = new THREE.CanvasTexture(canvas);
-    const material = new THREE.SpriteMaterial({ map: texture });
-    const label = new THREE.Sprite(material);
-    label.scale.set(2, 1, 1);
-    return label;
-}
 
 function createBoundingBox() {
     // Visual bounding box
