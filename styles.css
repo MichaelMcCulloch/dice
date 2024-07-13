@@ -34,3 +34,25 @@ body, html {
 #simulateButton:hover {
     background-color: #45a049;
 }
+
+#resultMatrix {
+    position: absolute;
+    top: 50px;
+    right: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 10px;
+    border-radius: 5px;
+    display: none;
+}
+
+#resultMatrix table {
+    border-collapse: collapse;
+}
+
+#resultMatrix td {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    font-weight: bold;
+    border: 1px solid #000;
+}

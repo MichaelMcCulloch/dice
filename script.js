@@ -4,9 +4,10 @@ const boxSize = 10;
 let isSimulating = false;
 let rollCount = 0;
 let lastMovementTime = 0;
-let diceResults = [];
+let diceResults = Array(6).fill().map(() => Array(6).fill(0));
 
 function init() {
+    createResultMatrix();
     initThreeJS();
     initCannon();
     createDice();
@@ -165,13 +166,12 @@ function checkDiceMovement() {
     const angularVelocity1 = diceBody1.angularVelocity.length();
     const angularVelocity2 = diceBody2.angularVelocity.length();
 
-
     if (velocity1 < 0.1 && velocity2 < 0.1 && angularVelocity1 < 0.1 && angularVelocity2 < 0.1) {
         if (currentTime - lastMovementTime > 1000) {
             const result1 = getDiceResult(dice1);
             const result2 = getDiceResult(dice2);
-            diceResults.push({ dice1: result1, dice2: result2 });
-            console.log(`Roll ${rollCount + 1}: Dice 1 = ${result1}, Dice 2 = ${result2}`);
+            diceResults[result1 - 1][result2 - 1]++;
+            updateResultMatrix();
             
             rollCount++;
             if (rollCount < 10) {
@@ -181,7 +181,6 @@ function checkDiceMovement() {
                 rollCount = 0;
                 document.getElementById('simulateButton').disabled = false;
                 console.log("Simulation complete. Final results:", diceResults);
-                diceResults = [];
             }
         }
     } else {
@@ -221,9 +220,52 @@ async function startSimulation() {
     if (isSimulating) return;
     isSimulating = true;
     rollCount = 0;
-    diceResults = [];
+    diceResults = Array(6).fill().map(() => Array(6).fill(0));
     document.getElementById('simulateButton').disabled = true;
+    document.getElementById('resultMatrix').style.display = 'block';
     await rollDice(true);
+}
+
+function createResultMatrix() {
+    const matrix = document.getElementById('resultMatrix');
+    const table = document.createElement('table');
+    
+    for (let i = 0; i <= 6; i++) {
+        const row = document.createElement('tr');
+        for (let j = 0; j <= 6; j++) {
+            const cell = document.createElement('td');
+            if (i === 0 && j === 0) {
+                cell.textContent = 'R\\Y';
+            } else if (i === 0) {
+                cell.textContent = j;
+                cell.style.backgroundColor = `rgb(255, ${255 - j * 30}, 200)`;
+            } else if (j === 0) {
+                cell.textContent = i;
+                cell.style.backgroundColor = `rgb(255, 200, ${255 - i * 30})`;
+            } else {
+                cell.id = `cell-${i}-${j}`;
+            }
+            row.appendChild(cell);
+        }
+        table.appendChild(row);
+    }
+    
+    matrix.appendChild(table);
+}
+
+function updateResultMatrix() {
+    for (let i = 1; i <= 6; i++) {
+        for (let j = 1; j <= 6; j++) {
+            const cell = document.getElementById(`cell-${i}-${j}`);
+            cell.textContent = diceResults[i-1][j-1];
+            const total = diceResults.flat().reduce((a, b) => a + b, 0);
+            const intensity = diceResults[i-1][j-1] / total;
+            const red = Math.floor(255 * (1 - intensity));
+            const green = Math.floor(200 * (1 - intensity));
+            const blue = Math.floor(255 * (1 - intensity));
+            cell.style.backgroundColor = `rgb(${red}, ${green}, ${blue})`;
+        }
+    }
 }
 
 init();
