@@ -74,8 +74,8 @@ function initThreeJS() {
     const spotLight = new THREE.SpotLight(0xffa95c, 0.7);
     spotLight.position.set(5, 15, 7.5);
     spotLight.castShadow = true;
-    spotLight.shadow.mapSize.width = 2048;
-    spotLight.shadow.mapSize.height = 2048;
+    spotLight.shadow.mapSize.width = 4096;
+    spotLight.shadow.mapSize.height = 4096;
     spotLight.shadow.camera.near = 1;
     spotLight.shadow.camera.far = 50;
     spotLight.shadow.radius = 5;
