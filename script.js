@@ -186,6 +186,14 @@ function createBoundingBox() {
         wallBody.position.set(...wall.pos);
         wallBody.quaternion.setFromEuler(...wall.rot);
         world.addBody(wallBody);
+
+        // Create contact material between dice and wall
+        const diceWallContactMaterial = new CANNON.ContactMaterial(
+            diceMaterial,
+            floorMaterial,
+            { restitution: 0.8, friction: 0.1 }
+        );
+        world.addContactMaterial(diceWallContactMaterial);
     });
 }
 
